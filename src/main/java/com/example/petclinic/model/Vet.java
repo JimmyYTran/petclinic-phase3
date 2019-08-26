@@ -25,7 +25,9 @@ public class Vet {
     private List<Speciality> specialities;
 
     // associations
-    @ManyToMany(mappedBy = "vets")
+    @ManyToMany(
+            mappedBy = "vets",
+            fetch = FetchType.LAZY)
     private List<Visit> visits = new ArrayList<>();
 
     protected Vet() {
