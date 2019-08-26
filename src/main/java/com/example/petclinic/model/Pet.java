@@ -1,28 +1,47 @@
 package com.example.petclinic.model;
 
+import org.hibernate.annotations.Cascade;
+
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public class Pet implements Modifiable {
+@Entity(name = "Pet")
+@Table(name = "pet")
+public class Pet {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     private String name;
     private Date birthDate;
     private PetType petType;
 
     // associations
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
     private Owner owner;
-    private List<Visit> visits;
 
-    public Pet(Long id) {
+    @OneToMany(
+            mappedBy = "pet",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    private List<Visit> visits = new ArrayList<>();
 
-        this(id, null, null, null);
+    public Pet() {
+
     }
 
-    public Pet(Long id, String name, Date birthDate, PetType petType) {
-
+    public Pet(Long id) {
         this.id = id;
+    }
+
+    public Pet(String name, Date birthDate, PetType petType) {
+
         this.name = name;
         this.birthDate = birthDate;
         this.petType = petType;

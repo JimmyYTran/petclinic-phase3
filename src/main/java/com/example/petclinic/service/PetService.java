@@ -5,6 +5,7 @@ import com.example.petclinic.repository.PetRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PetService implements BasicService<Pet> {
@@ -19,31 +20,38 @@ public class PetService implements BasicService<Pet> {
     @Override
     public Pet add(Pet pet) {
 
-        return petRepository.create(pet);
+        return petRepository.save(pet);
     }
 
     @Override
     public Pet get(Long id) {
 
-        return petRepository.read(new Pet(id));
+        Optional optional = this.petRepository.findById(id);
+
+        Pet result = null;
+        if (optional.isPresent()) {
+            result = (Pet) optional.get();
+        }
+        return result;
     }
 
     @Override
     public Pet modify(Pet pet) {
 
-        return petRepository.update(pet);
+        return petRepository.save(pet);
     }
 
     @Override
     public boolean delete(Pet pet) {
 
-        return petRepository.delete(pet);
+        this.petRepository.delete(pet);
+        return true;
     }
 
     @Override
     public List<Pet> getAll() {
 
-        return petRepository.getAll();
+        return (List<Pet>) petRepository.findAll();
     }
 
 }

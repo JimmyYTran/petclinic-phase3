@@ -1,18 +1,34 @@
 package com.example.petclinic.model;
 
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public class Visit implements Modifiable {
+@Entity(name = "Visit")
+@Table(name = "visit")
+public class Visit {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Date dateOfVisit;
     private String description;
 
     // associations
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pet_id")
     private Pet pet;
-    private List<Vet> vets;
+
+    @ManyToMany(cascade =
+            {CascadeType.PERSIST,
+            CascadeType.MERGE})
+    @JoinTable(
+            name = "visit_vet",
+            joinColumns = @JoinColumn(name = "visit_id"),
+            inverseJoinColumns = @JoinColumn(name = "vet_id"))
+    private List<Vet> vets = new ArrayList<>();
 
     protected Visit() {
 
@@ -22,9 +38,8 @@ public class Visit implements Modifiable {
         this.id = id;
     }
 
-    public Visit(Long id, Date dateOfVisit, String description) {
+    public Visit(Date dateOfVisit, String description) {
 
-        this.id = id;
         this.dateOfVisit = dateOfVisit;
         this.description = description;
 

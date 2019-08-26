@@ -33,13 +33,11 @@ public class Owner {
     }
 
     public Owner(Long id) {
-
-        this(id, null, null, null, null);
+        this.id = id;
     }
 
-    public Owner(Long id, String name, String address, String city, String phoneNumber) {
+    public Owner(String name, String address, String city, String phoneNumber) {
 
-        this.id = id;
         this.name = name;
         this.address = address;
         this.city = city;
