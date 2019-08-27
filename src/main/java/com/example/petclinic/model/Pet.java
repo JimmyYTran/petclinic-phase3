@@ -167,4 +167,42 @@ public class Pet {
         sb.append('}');
         return sb.toString();
     }
+
+    public static PetBuilder builder() { return new PetBuilder(); }
+
+    public static final class PetBuilder {
+        private Pet pet;
+
+        private PetBuilder() {
+            pet = new Pet();
+        }
+
+        public static PetBuilder aPet() {
+            return new PetBuilder();
+        }
+
+        public PetBuilder withId(Long id) {
+            pet.setId(id);
+            return this;
+        }
+
+        public PetBuilder withName(String name) {
+            pet.setName(name);
+            return this;
+        }
+
+        public PetBuilder withBirthDate(Date birthDate) {
+            pet.setBirthDate(birthDate);
+            return this;
+        }
+
+        public PetBuilder withPetType(PetType petType) {
+            pet.setPetType(petType);
+            return this;
+        }
+
+        public Pet build() {
+            return pet;
+        }
+    }
 }

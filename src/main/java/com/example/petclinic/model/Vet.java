@@ -4,9 +4,7 @@ import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity(name = "Vet")
 @Table(name = "vet")
@@ -28,7 +26,7 @@ public class Vet {
     @ManyToMany(
             mappedBy = "vets",
             fetch = FetchType.LAZY)
-    private List<Visit> visits = new ArrayList<>();
+    private Set<Visit> visits = new HashSet<>();
 
     protected Vet() {
 
@@ -39,7 +37,7 @@ public class Vet {
         this.id = id;
     }
 
-    public Vet(String name, List<Speciality> specialities, List<Visit> visits) {
+    public Vet(String name, List<Speciality> specialities, Set<Visit> visits) {
 
         this.name = name;
         this.specialities = specialities;
@@ -96,7 +94,7 @@ public class Vet {
         }
     }
 
-    public List<Visit> getVisits() {
+    public Set<Visit> getVisits() {
 
         return this.visits;
     }
@@ -121,5 +119,43 @@ public class Vet {
         sb.append(", name='").append(name).append('\'');
         sb.append('}');
         return sb.toString();
+    }
+
+    public static VetBuilder builder() { return new VetBuilder(); }
+
+    public static final class VetBuilder {
+        private Vet vet;
+
+        private VetBuilder() {
+            vet = new Vet();
+        }
+
+        public static VetBuilder aVet() {
+            return new VetBuilder();
+        }
+
+        public VetBuilder withId(Long id) {
+            vet.setId(id);
+            return this;
+        }
+
+        public VetBuilder withName(String name) {
+            vet.setName(name);
+            return this;
+        }
+
+        public VetBuilder withSpecialities(List<Speciality> specialities) {
+            vet.setSpecialities(specialities);
+            return this;
+        }
+
+        public VetBuilder withVisits(List<Visit> visits) {
+            visits.stream().forEach(T -> vet.addVisit(T));
+            return this;
+        }
+
+        public Vet build() {
+            return vet;
+        }
     }
 }

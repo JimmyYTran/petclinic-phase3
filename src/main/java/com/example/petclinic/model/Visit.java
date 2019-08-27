@@ -1,10 +1,7 @@
 package com.example.petclinic.model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity(name = "Visit")
 @Table(name = "visit")
@@ -28,7 +25,7 @@ public class Visit {
             name = "visit_vet",
             joinColumns = @JoinColumn(name = "visit_id"),
             inverseJoinColumns = @JoinColumn(name = "vet_id"))
-    private List<Vet> vets = new ArrayList<>();
+    private Set<Vet> vets = new HashSet<>();
 
     protected Visit() {
 
@@ -128,7 +125,7 @@ public class Visit {
         return pet;
     }
 
-    public List<Vet> getVets() {
+    public Set<Vet> getVets() {
         return this.vets;
     }
 
@@ -153,5 +150,43 @@ public class Visit {
         sb.append(", description='").append(description).append('\'');
         sb.append('}');
         return sb.toString();
+    }
+
+    public static VisitBuilder builder() { return new VisitBuilder(); }
+
+    public static final class VisitBuilder {
+        private Visit visit;
+
+        private VisitBuilder() {
+            visit = new Visit();
+        }
+
+        public static VisitBuilder aVisit() {
+            return new VisitBuilder();
+        }
+
+        public VisitBuilder withId(Long id) {
+            visit.setId(id);
+            return this;
+        }
+
+        public VisitBuilder withDateOfVisit(Date dateOfVisit) {
+            visit.setDateOfVisit(dateOfVisit);
+            return this;
+        }
+
+        public VisitBuilder withDescription(String description) {
+            visit.setDescription(description);
+            return this;
+        }
+
+        public VisitBuilder withPet(Pet pet) {
+            visit.addPet(pet);
+            return this;
+        }
+
+        public Visit build() {
+            return visit;
+        }
     }
 }
